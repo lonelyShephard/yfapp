@@ -1,32 +1,28 @@
 import yfinance as yf
 
-def get_stock_data(ticker, start_date, end_date):
-    """
-    Fetch historical stock data for a given ticker within a date range.
+def fetch_stock_data(symbol, exchange, start_date, end_date):  
+    print(f"🔎 Fetching data for {symbol} on {exchange} from {start_date} to {end_date}")
 
-    Args:
-        ticker (str): Stock ticker symbol (e.g., 'AAPL').
-        start_date (str): Start date in 'YYYY-MM-DD' format.
-        end_date (str): End date in 'YYYY-MM-DD' format.
-
-    Returns:
-        list: A list of dictionaries containing stock data (Date, Open, High, Low, Close, Volume).
-    """
     try:
-        # Fetch stock data using yfinance
+        # Handle NSE/NASDAQ ticker format
+        if exchange == "NSE":
+            ticker = f"{symbol}.NS"
+        elif exchange == "NASDAQ":
+            ticker = symbol  # No suffix needed
+        else:
+            return None  # Invalid exchange
+
+        print(f"✅ Using ticker: {ticker}")
+
         stock = yf.Ticker(ticker)
-        hist = stock.history(start=start_date, end=end_date)
+        df = stock.history(start=start_date, end=end_date)
 
-        # If no data is returned, return an empty list
-        if hist.empty:
-            return []
+        if df.empty:
+            print("⚠️ No data returned from yfinance")
+            return None
 
-        # Convert the index to a column and format dates
-        hist.reset_index(inplace=True)
-        hist["Date"] = hist["Date"].dt.strftime('%Y-%m-%d')
-
-        # Extract required columns
-        return hist[['Date', 'Open', 'High', 'Low', 'Close', 'Volume']].to_dict(orient='records')
+        return df.to_dict(orient="records")
 
     except Exception as e:
-        return {"error": str(e)}
+        print(f"❌ Error in fetch_stock_data: {str(e)}")
+        return None
