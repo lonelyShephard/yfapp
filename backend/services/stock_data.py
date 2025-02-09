@@ -6,7 +6,8 @@ def fetch_stock_data(symbol, exchange, start_date, end_date):
     try:
         # Handle NSE/NASDAQ ticker format
         if exchange == "NSE":
-            ticker = f"{symbol}.NS"
+            ticker = symbol
+            #ticker = f"{symbol}.NS"
         elif exchange == "NASDAQ":
             ticker = symbol  # No suffix needed
         else:
