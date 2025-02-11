@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import StockInput from './StockInput';
 import StockDisplay from './StockDisplay';
 import { fetchStockData } from '../services/api';
-import stockListData from '../data/stocks.json'; // ✅ Import JSON directly
 
 const StockAnalysisApp = () => {
     const [stockData, setStockData] = useState(null);
     const [stockList, setStockList] = useState([]);
 
     useEffect(() => {
-        setStockList(stockListData); // ✅ Set stock list from imported JSON
-        console.log("Stock List Loaded:", stockListData);
+        import('../data/stocks.json')
+            .then(data => setStockList(data.default))
+            .catch(error => console.error("Error loading stock list:", error));
     }, []);
 
     const handleFetchData = async (symbol, exchange, startDate, endDate) => {
