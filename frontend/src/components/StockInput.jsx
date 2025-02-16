@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './StockInput.css';
 
 const StockInput = ({ onFetchData, stockList = [] }) => {
     const [symbol, setSymbol] = useState('');
