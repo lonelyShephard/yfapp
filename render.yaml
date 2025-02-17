@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: yfapp-backend
+    env: python
+    buildCommand: |
+      pip install -r backend/requirements.txt
+    startCommand: gunicorn --chdir backend app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: PORT
+        value: 10000
