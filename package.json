@@ -1,11 +1,13 @@
 {
   "name": "yfapp",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
-    "start": "concurrently \"yarn start-frontend\" \"yarn start-backend\"",
-    "start-frontend": "cd frontend && yarn start",
-    "start-backend": "cd backend && python app.py"
+    "start": "cd backend && python app.py",
+    "build": "cd frontend && yarn install && yarn build"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

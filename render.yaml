@@ -3,10 +3,21 @@ services:
     name: yfapp-backend
     env: python
     buildCommand: |
-      pip install -r backend/requirements.txt
-    startCommand: gunicorn --chdir backend app:app
+      # Update pip and install backend dependencies
+      python -m pip install --upgrade pip
+      cd backend && pip install -r requirements.txt
+      
+      # Install frontend dependencies
+      cd ../frontend && yarn install && yarn build
+    startCommand: cd backend && gunicorn app:app --timeout 120 --workers 2
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
+      - key: NODE_VERSION
+        value: 18.x
       - key: PORT
         value: 10000
+      - key: FLASK_ENV
+        value: production
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://yfapp.onrender.com
