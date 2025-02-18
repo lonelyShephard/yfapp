@@ -6,3 +6,11 @@ backend/venv/
 
 # Ignore build files
 frontend/build/
+# Ignore node_modules (React dependencies)
+frontend/node_modules/
+
+# Ignore virtual environment (Python dependencies)
+backend/venv/
+
+# Ignore build files
+frontend/build/
