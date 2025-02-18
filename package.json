@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "cd backend && gunicorn app:app",
-    "build": "yarn install-python-deps",
-    "install-python-deps": "cd backend && python -m pip install --no-cache-dir -r requirements.txt",
+    "build": "cd backend && python -m pip install -r requirements.txt --no-cache-dir",
     "test-backend": "cd backend && python -c 'import flask; print(flask.__version__)'",
     "clean": "cd backend && rm -rf __pycache__ && pip cache purge"
   }
