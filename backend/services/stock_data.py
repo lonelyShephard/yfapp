@@ -35,6 +35,7 @@ def fetch_stock_data(symbol, exchange, start_date, end_date):
         for record in data:
             record['Date'] = record['Date'].isoformat()
 
+        print(f"✅ Successfully fetched {len(data)} records")
         return data
 
     except Exception as e:

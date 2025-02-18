@@ -9,10 +9,24 @@ from services.stock_data import fetch_stock_data
 sys.stdout.reconfigure(encoding='utf-8')
 
 app = Flask(__name__)
-CORS(app)  # ✅ Allows all origins (for now)
+CORS(app)
+
+@app.route('/', methods=['GET'])
+def health_check():
+    try:
+        return jsonify({
+            "status": "healthy",
+            "port": "10000",
+            "service": "yfapp-backend",
+            "message": "YF App Backend is running"
+        }), 200
+    except Exception as e:
+        print(f"❌ Health check error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/fetch_stock_data', methods=['GET'])
 def fetch_stock_data_endpoint():
+    print(f"📝 Received request at: {request.path}")
     try:
         symbol = request.args.get('symbol')
         exchange = request.args.get('exchange', 'NSE')  # Default: NSE
@@ -37,6 +51,17 @@ def fetch_stock_data_endpoint():
         print(f"❌ Error fetching stock data:\n{error_trace}")
         return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
 
-if __name__ == '__main__':
-    debug_mode = os.getenv("FLASK_DEBUG", "True") == "True"
-    app.run(host='0.0.0.0', port=5000, debug=debug_mode)  # ✅ Configurable for deployment
+if __name__ == "__main__":
+    PORT = 10000
+    try:
+        print(f"🚀 Starting server on http://localhost:{PORT}")
+        app.run(
+            host='0.0.0.0',  # Changed to allow all incoming connections
+            port=PORT, 
+            debug=True,
+            use_reloader=False,
+            threaded=True    # Enable threading for better request handling
+        )
+    except Exception as e:
+        print(f"❌ Error starting server: {str(e)}")
+        print(f"Stack trace:\n{traceback.format_exc()}")
