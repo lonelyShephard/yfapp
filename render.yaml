@@ -2,9 +2,8 @@ services:
   - type: web
     name: yfapp-backend
     env: python
-    region: singapore
     buildCommand: |
-      # Python setup
+      # Upgrade pip and install requirements
       python -m pip install --upgrade pip
       cd backend
       pip install -r requirements.txt --no-cache-dir
@@ -14,5 +13,3 @@ services:
         value: 3.9.0
       - key: PORT
         value: 10000
-      - key: PYTHONPATH
-        value: /opt/render/project/src/backend
