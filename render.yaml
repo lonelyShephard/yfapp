@@ -2,10 +2,7 @@ services:
   - type: web
     name: yfapp-backend
     env: python
-    buildCommand: |
-      cd backend
-      python -m pip install --upgrade pip
-      pip install --no-cache-dir -r requirements.txt
+    buildCommand: cd backend && python -m pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
     startCommand: cd backend && python -m gunicorn app:app
     envVars:
       - key: PYTHON_VERSION
