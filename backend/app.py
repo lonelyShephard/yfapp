@@ -9,7 +9,7 @@ from services.stock_data import fetch_stock_data
 sys.stdout.reconfigure(encoding='utf-8')
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Enable CORS to allow the Netlify frontend to make requests
 
 @app.route('/', methods=['GET'])
 def health_check():
@@ -44,7 +44,7 @@ def fetch_stock_data_endpoint():
         if data is None:
             return jsonify({"error": "No data found"}), 404
 
-        return jsonify(data)
+        return jsonify(data), 200
 
     except Exception as e:
         error_trace = traceback.format_exc()
