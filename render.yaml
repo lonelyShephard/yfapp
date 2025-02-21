@@ -8,6 +8,7 @@ services:
       pip install --no-cache-dir -r requirements.txt
     startCommand: |
       cd backend
+      mkdir -p /opt/render/.cache/py-yfinance
       python -m gunicorn app:app
     envVars:
       - key: PYTHON_VERSION
