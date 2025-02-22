@@ -2,6 +2,7 @@
 import os
 import traceback
 from flask import Flask, request, jsonify
+import sys
 from flask_cors import CORS
 from services.stock_data import fetch_stock_data
 
