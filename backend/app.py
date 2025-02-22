@@ -1,8 +1,8 @@
-import sys
+
 import os
 import traceback
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import syst CORS
 from services.stock_data import fetch_stock_data
 
 # ✅ Fix UnicodeEncodeError in Windows
