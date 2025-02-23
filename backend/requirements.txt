@@ -5,4 +5,6 @@ gunicorn==21.2.0
 yfinance==0.2.30
 pandas==2.2.0
 numpy==1.26.3
+flask-caching
+
 # (Include any others as needed)
