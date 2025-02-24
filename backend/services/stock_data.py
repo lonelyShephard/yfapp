@@ -1,7 +1,7 @@
-import time
 import requests
 import yfinance as yf
 import random
+import time
 
 # Create a persistent session
 session = requests.Session()
@@ -20,7 +20,6 @@ def fetch_stock_data(symbol, exchange, start_date, end_date, max_retries=5):
 
     for attempt in range(max_retries):
         try:
-            # Handle NSE/NASDAQ ticker format
             if exchange in ["NSE", "NASDAQ"]:
                 ticker = symbol
             else:
@@ -29,41 +28,22 @@ def fetch_stock_data(symbol, exchange, start_date, end_date, max_retries=5):
 
             print(f"✅ Using ticker: {ticker}")
 
-            # Introduce a random delay (1-3 seconds) before the request to mimic human behavior
             time.sleep(random.uniform(1, 3))
 
             stock = yf.Ticker(ticker, session=session)
-
-            # Debugging: Print ticker info
             ticker_info = stock.info
-            if not ticker_info or ticker_info == {}:
-                print(f"⚠️ No valid info found for {symbol}. It may be delisted or incorrect.")
+            if not ticker_info:
+                print(f"⚠️ No valid info found for {symbol}.")
                 return {"error": f"No valid info found for {symbol}"}
-            print(f"🧐 Ticker Info: {ticker_info}")
-
-            # Fetch historical data
-            df = stock.history(
-                start=start_date,
-                end=end_date,
-                interval="1d",
-                auto_adjust=True
-            )
-
-            # Debugging: Print raw data
-            print(f"📜 Raw Data from yfinance:\n{df}")
-
+            
+            df = stock.history(start=start_date, end=end_date, interval="1d", auto_adjust=True)
             if df.empty:
-                print(f"⚠️ No data returned for {symbol}. Possible reasons:")
-                print("- The ticker symbol is incorrect")
-                print("- The stock may be delisted or unavailable")
-                print("- yfinance API might be down")
+                print(f"⚠️ No data available for {symbol}.")
                 return {"error": f"No data available for {symbol}"}
 
-            # Convert DataFrame to records with date handling
             df.reset_index(inplace=True)
             data = df.to_dict(orient="records")
 
-            # Format dates for JSON output
             for record in data:
                 record['Date'] = record['Date'].isoformat()
 
@@ -71,13 +51,12 @@ def fetch_stock_data(symbol, exchange, start_date, end_date, max_retries=5):
             return data
 
         except requests.exceptions.RequestException as err:
-            if "429" in str(err):  # Rate limit error
+            if "429" in str(err):
                 print(f"⚠️ Rate limited. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
-                retry_delay *= 2  # Exponential backoff
+                retry_delay *= 2
             else:
                 print(f"❌ Network error: {err}")
                 return {"error": f"Network error: {err}"}
 
-    print("❌ Too many requests. Try again later.")
     return {"error": "Too many requests. Try again later."}
